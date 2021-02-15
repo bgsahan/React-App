@@ -1,0 +1,10 @@
+{
+  "projects": {
+    "default": "reports-a586c",
+    "support-app": "support-5b3fd",
+    "support": "support-5b3fd",
+    "com-sup": "com-sup",
+    "greenpass": "greenpass-4861b",
+    "report": "reports-a586c"
+  }
+}

@@ -1,17 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import App from './App';
-import * as serviceWorker from './serviceWorker';
+import GreenpassHomepage from './greenpass/GreenpassHomepage';
+import SupportHomepage from './c-support/support/SupportHomepage';
+import ReportHomepage from './reports/ReportHomepage';
+import ReportHomepage2 from './reports/ReportHomepage2';
 
-ReactDOM.render(
-  <React.StrictMode>
-    <App />
-  </React.StrictMode>,
-  document.getElementById('root')
-);
 
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+class MyApp extends React.Component {
+
+  render() {
+    return (
+      <div>
+        {/* To change the app comment out the unwanted ap   */}
+        {/* <GreenpassHomepage /> */}
+        <ReportHomepage2 />
+      </div>
+    );
+  }
+
+}
+
+const e = React.createElement;
+const domContainer = document.querySelector('#root');
+ReactDOM.render(e(MyApp), domContainer);
