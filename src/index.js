@@ -5,6 +5,7 @@ import GreenpassHomepage from './greenpass/GreenpassHomepage';
 import SupportHomepage from './c-support/support/SupportHomepage';
 import ReportHomepage from './reports/ReportHomepage';
 import ReportHomepage2 from './reports/ReportHomepage2';
+import ReportSearchPage from './reports/ReportSearchPage';
 
 
 class MyApp extends React.Component {
@@ -14,7 +15,7 @@ class MyApp extends React.Component {
       <div>
         {/* To change the app comment out the unwanted ap   */}
         {/* <GreenpassHomepage /> */}
-        <ReportHomepage2 />
+        <ReportSearchPage />
       </div>
     );
   }

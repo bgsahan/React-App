@@ -58,8 +58,13 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     // is call UseEffect after Url of the item is changed AFTER clicking Upload button. I wasn't be able to do this 
     // with .then() methods
     useEffect(() => {
-        // The code where we create/add item into database
-        onCreateNewReport(newReportTitle, newReportDescription, newReportUrl);
+
+        // We check if there is any value inside Url string. IF we don't do this UseEffect calls anytime the page
+        // reloads and adds an empty item into the database.
+        if (newReportUrl) {
+          // The code where we create/add item into database
+          onCreateNewReport(newReportTitle, newReportDescription, newReportUrl);
+        }
 
         setNewReportTitle("");
         setNewReportDescription("");
