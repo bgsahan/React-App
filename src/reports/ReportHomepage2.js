@@ -17,7 +17,7 @@ const ReportHomepage2 = () => {
     });
   }, []);
 
-  //The reports are loaded initially
+  //The reports are loaded initially.
   useEffect(() => {
     loadReports();
   }, [loadReports]);
