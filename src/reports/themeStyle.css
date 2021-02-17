@@ -51,7 +51,6 @@ h4 {
 .container {
     display: block;
     padding: 10px;
-    background-color: #e2ff93;
 }
 
 input { 
@@ -68,3 +67,7 @@ table {
     border-collapse: collapse;
     table-layout: fixed;
 }  
+
+.card_div {
+    
+}
