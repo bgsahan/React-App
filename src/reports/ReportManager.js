@@ -2,7 +2,45 @@ import React, { useCallback, useState, useEffect } from "react";
 import {app} from './base.js'
 import { useRef } from "react";
 
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import { makeStyles } from '@material-ui/core/styles';
+import Card from '@material-ui/core/Card';
+import CardActions from '@material-ui/core/CardActions';
+import CardContent from '@material-ui/core/CardContent';
+import Typography from '@material-ui/core/Typography';
+
+const useStyles = makeStyles((theme) => ({
+  root: {
+    '& > *': {
+      margin: theme.spacing(1),
+    },
+  },
+}));
+
+const useCardStyles = makeStyles({
+  root: {
+    minWidth: 275,
+    marginBottom: 10,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 12,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+});  
+
 export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport }) => {
+
+    const classes = useStyles();
+    const cardClasses = useCardStyles();
+
     const fileUpload = useRef(); // We bind this reference with Input for file upload via ref attribute
 
     var fileUrl;  //variable to receive full url of the file uploaded in Firebase Storage
@@ -73,22 +111,26 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
   
     return (
       <div>
-          <form>
+          <form className={classes.root} noValidate autoComplete="off">
 
-            <div className="container">
-                <input
-                  type="text"
-                  placeholder="Report title..."
-                  value={newReportTitle}
-                  onChange={onNewReportTitleChange} />
+            <div>
+              <TextField
+                          id="outlined-read-only-input"
+                          label="Rapor Başlığı"
+                          size="small"
+                          value={newReportTitle}
+                          onChange={onNewReportTitleChange}
+                          variant="outlined" />
             </div>
 
-            <div className="container">
-                <input
-                  type="text"
-                  placeholder="Description..."
-                  value={newReportDescription}
-                  onChange={onNewReportDescriptionChange} />
+            <div>
+              <TextField
+                          id="outlined-read-only-input"
+                          label="Açıklama"
+                          size="small"
+                          value={newReportDescription}
+                          onChange={onNewReportDescriptionChange}
+                          variant="outlined" />
             </div>
 
 {/*   Code for manually entering Url
@@ -107,9 +149,9 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
             </div>
 
             <div className="container">
-                <button type="submit" onClick={onAddReport}>
-                  Upload
-                </button>
+                <Button onClick={onAddReport} type="submit" variant="contained" color="primary" >
+                  Yükle
+                </Button>
             </div>
 
           </form>
@@ -120,16 +162,21 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
           <ul>
             {reports.map((report) => (
                 <div>
-                    <table key="table_key">
-                        <thead></thead>
-                            <tbody>
-                                <tr key={report[1].title}>
-                                    <td>{report[1].title}</td>
-                                    <td>{report[1].description}</td>
-                                    <td>{report[1].url}</td>
-                                 </tr>
-                            </tbody>
-                    </table>
+                    <div className="card_div">
+                        <Card className={cardClasses.root}>
+                            <CardContent>
+                                <Typography variant="h6" component="h2">
+                                    {report[1].title}
+                                </Typography>
+                                <Typography className={cardClasses.title} color="textSecondary" gutterBottom>
+                                    {report[1].description}
+                                </Typography>
+                                <Typography className={cardClasses.title} color="textSecondary" gutterBottom>
+                                    {report[1].url}
+                                </Typography>
+                            </CardContent>
+                        </Card>
+                  </div>
                 </div>
             ))}
           </ul>

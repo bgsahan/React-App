@@ -60,7 +60,7 @@ export default function SupportTypeSelect() {
                 <FormHelperText>Kontrolü yapılacak harcamanın destek türünü seçiniz</FormHelperText>
             </FormControl>
 
-            {itemOnDisplay}
+            
 
         </div>
 
