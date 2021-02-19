@@ -1,0 +1,11 @@
+> You should use InputRef to be able to reference and get the value of TextField. 
+Also you need to use "current" to be able get the referenced TextField.
+
+> I created a main ReportApp.js and applied Routers, Route, SWitch, navigation components
+in this file. Switch is required to prevent React uploading a page (component) under another.
+I used Lİnks with Buttons to visit the paths created with Route component.
+
+> I deleted useCallbacks with onChange methods inside TextField in upload page. Because it was making the 
+page very slow. I used refs to get the vlaue from the TextField and changed the title and description with this
+value. I changed the vlaues in onAddReport callback and created the item inside useEffect. Otherwise it changes
+title and description but using the one former vlaues of these variables.

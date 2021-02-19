@@ -42,6 +42,8 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     const cardClasses = useCardStyles();
 
     const fileUpload = useRef(); // We bind this reference with Input for file upload via ref attribute
+    const reportTitleTextfieldRef = useRef(null);
+    const reportDescriptionTextfieldRef = useRef(null);
 
     var fileUrl;  //variable to receive full url of the file uploaded in Firebase Storage
 
@@ -87,7 +89,13 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
             });
         });
 
+      
+
+      setNewReportTitle(reportTitleTextfieldRef.current.value);
+      setNewReportDescription(reportDescriptionTextfieldRef.current.value);
+      console.log(newReportTitle + " " + newReportDescription);
       },
+
       [newReportTitle, newReportDescription, newReportUrl]
     );
 
@@ -115,22 +123,20 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
 
             <div>
               <TextField
-                          id="outlined-read-only-input"
+                          id="report_title_textfield"
                           label="Rapor Başlığı"
                           size="small"
-                          value={newReportTitle}
-                          onChange={onNewReportTitleChange}
-                          variant="outlined" />
+                          variant="outlined"
+                          inputRef={reportTitleTextfieldRef} />
             </div>
 
             <div>
               <TextField
-                          id="outlined-read-only-input"
+                          id="report_description_textfield"
                           label="Açıklama"
                           size="small"
-                          value={newReportDescription}
-                          onChange={onNewReportDescriptionChange}
-                          variant="outlined" />
+                          variant="outlined"
+                          inputRef={reportDescriptionTextfieldRef} />
             </div>
 
 {/*   Code for manually entering Url
