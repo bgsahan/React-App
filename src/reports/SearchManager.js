@@ -9,6 +9,7 @@ import SearchIcon from '@material-ui/icons/Search';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
@@ -30,17 +31,42 @@ const useCardStyles = makeStyles({
       transform: 'scale(0.8)',
     },
     title: {
+      color: "black",
       fontSize: 14,
+      fontWeight: "bold",
+    },
+    description: {
+      fontSize: 12,
+      fontWeight: "normal",
+    },
+    card_content: {
+      margin: 0,
+      padding: 0,
     },
     pos: {
       marginBottom: 12,
     },
 });  
 
+const useCardContentStyles = makeStyles({
+  cardcontent: {
+    paddingTop: 5,
+    paddingBottom: 0,
+    paddingLeft: 15,
+    paddingRight: 15,
+    "&:last-child": {
+      paddingBottom: 0
+    }
+  }
+});
+
 export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport }) => {
 
     const classes = useStyles();
     const cardClasses = useCardStyles();
+    const cardContentClasses = useCardContentStyles();
+
+    const reportTitleTextfieldRef = useRef(null);
 
     // UseStates. Whenever setter method is called screen re-renders with updated values
     const [newReportTitle, setNewReportTitle] = useState("");
@@ -51,29 +77,15 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     // time to fetch reports long after this statement is called. And at the time this statement is called initial
     // value is null. Try to find a different solution. Maybe with UseEffect?
     const [queriedReportList, setQueriedReportList] = useState(reports); 
-  
-    // USeCallBacks. Used to track changes in Input fields via onChange attribute 
-    const onNewReportTitleChange = useCallback((event) => {
-      setNewReportTitle(event.target.value);
-    }, []);
 
     // Search button callback.. IF nothing is written inside Search input field then it brings all items and 
     // it doesn't assign reports list to queryReportList. I removed USeCallback because it was respnding only to changes
     // but at start we don't have any changes so it wouldn't call the methods.
-    const onAddReport = ((event) => {
+    const onSearchReport = ((event) => {
         event.preventDefault();
 
-        // check if there is any text inside search field before applying search
-        if (newReportTitle) {
-            // I added useState for queriedReportList because whenever a new list is queried we need to update the table
-            setQueriedReportList(reports.filter(([key, value]) => value.title.includes(newReportTitle)));
-            console.log(queriedReportList);
-            console.log(newReportTitle);
+        setNewReportTitle(reportTitleTextfieldRef.current.value);
 
-        // if there is no text in search field then fetch all the items
-        } else {
-            setQueriedReportList(reports);
-        }
       });
 
 
@@ -95,6 +107,29 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
 
     }, [reports]); // Only re-run the effect if newReportUrl changes
 
+    useEffect(() => {
+
+        // check if there is any text inside search field before applying search
+        if (newReportTitle) {
+          // I added useState for queriedReportList because whenever a new list is queried we need to update the table
+          setQueriedReportList(reports.filter(([key, value]) => value.title.includes(newReportTitle)));
+          //console.log(queriedReportList);
+          //console.log(newReportTitle);
+
+        // if there is no text in search field then fetch all the items
+        } else {
+            setQueriedReportList(reports);
+        }
+
+    }, [newReportTitle]); 
+
+    function setTitle() {
+      return new Promise((resolve, reject) => {
+        setNewReportTitle(reportTitleTextfieldRef.current.value);
+        resolve(newReportTitle);
+      })
+    }
+
     return (
         <div>
             <form>
@@ -111,13 +146,13 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
                                 </InputAdornment>
                             ),
                         }}
-                        value={newReportTitle}
-                        onChange={onNewReportTitleChange}
-                        variant="outlined" />
+                        variant="outlined"
+                        size="small"
+                        inputRef={reportTitleTextfieldRef} />
                 </div>
 
                 <div className={classes.root}>
-                    <Button onClick={onAddReport} variant="contained" color="primary" >
+                    <Button onClick={onSearchReport} variant="contained" color="primary" >
                         Ara
                     </Button>
                 </div>
@@ -129,19 +164,18 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
             <p>Reports:</p>
             <ul>
                     {queriedReportList.map((report) => (
-                        <div className="card_div">
+                        <div className="card_div" onClick={() => onReadReport(report[1].url)}>
                             <Card className={cardClasses.root}>
-                                <CardContent>
-                                    <Typography variant="h6" component="h2">
-                                        {report[1].title}
-                                    </Typography>
-                                    <Typography className={cardClasses.title} color="textSecondary" gutterBottom>
-                                        {report[1].description}
-                                    </Typography>
-                                </CardContent>
-                                <CardActions>
-                                    <Button onClick={() => onReadReport(report[1].url)} size="small">Read</Button>
-                                </CardActions>
+                                <CardActionArea>
+                                  <CardContent className={cardContentClasses.cardcontent}>
+                                      <Typography className={cardClasses.title} variant="h6" component="h2">
+                                          {report[1].title}
+                                      </Typography>
+                                      <Typography className={cardClasses.description} color="textSecondary" gutterBottom>
+                                          {report[1].description}
+                                      </Typography>
+                                  </CardContent>
+                                </CardActionArea>
                             </Card>
                         </div>
                     ))}

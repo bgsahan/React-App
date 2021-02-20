@@ -8,6 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
+import CardActionArea from '@material-ui/core/CardActionArea';
 import Typography from '@material-ui/core/Typography';
 
 const useStyles = makeStyles((theme) => ({
@@ -29,17 +30,36 @@ const useCardStyles = makeStyles({
     transform: 'scale(0.8)',
   },
   title: {
+    color: "black",
+    fontSize: 14,
+    fontWeight: "bold",
+  },
+  description: {
     fontSize: 12,
+    fontWeight: "normal",
   },
   pos: {
     marginBottom: 12,
   },
 });  
 
+const useCardContentStyles = makeStyles({
+  cardcontent: {
+    paddingTop: 5,
+    paddingBottom: 0,
+    paddingLeft: 15,
+    paddingRight: 15,
+    "&:last-child": {
+      paddingBottom: 0
+    }
+  }
+});
+
 export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport }) => {
 
     const classes = useStyles();
     const cardClasses = useCardStyles();
+    const cardContentClasses = useCardContentStyles();
 
     const fileUpload = useRef(); // We bind this reference with Input for file upload via ref attribute
     const reportTitleTextfieldRef = useRef(null);
@@ -51,15 +71,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     const [newReportTitle, setNewReportTitle] = useState("");
     const [newReportDescription, setNewReportDescription] = useState("");
     const [newReportUrl, setNewReportUrl] = useState("");
-  
-    // USeCallBacks. Used to track changes in Input fields via onChange attribute 
-    const onNewReportTitleChange = useCallback((event) => {
-      setNewReportTitle(event.target.value);
-    }, []);
-
-    const onNewReportDescriptionChange = useCallback((event) => {
-        setNewReportDescription(event.target.value);
-      }, []);
 
     const onNewReportUrlChange = useCallback((event) => {
         //Implement this if you need manual Url typing       
@@ -116,6 +127,17 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
         setNewReportDescription("");
         //setNewReportUrl("");
     }, [newReportUrl]); // Only re-run the effect if newReportUrl changes
+
+
+    // Card button onClick event handler
+    const onReadReport = ((reportUrl) => {
+      //event.preventDefault();
+  
+      const url = reportUrl;
+      window.open(url, '_blank');
+  
+      console.log("Button clicked");
+    });
   
     return (
       <div>
@@ -168,19 +190,25 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
           <ul>
             {reports.map((report) => (
                 <div>
-                    <div className="card_div">
+                    <div >
                         <Card className={cardClasses.root}>
-                            <CardContent>
-                                <Typography variant="h6" component="h2">
-                                    {report[1].title}
+                            <div onClick={() => onReadReport(report[1].url)}>
+                              <CardActionArea>
+                                <CardContent className={cardContentClasses.cardcontent}>
+                                    <Typography className={cardClasses.title} variant="h6" component="h2">
+                                        {report[1].title}
+                                    </Typography>
+                                    <Typography className={cardClasses.description} color="textSecondary" gutterBottom>
+                                        {report[1].description}
+                                    </Typography>
+                                  </CardContent>
+                                </CardActionArea>
+                            </div>
+                            <div className="card_div2">
+                                <Typography className={cardClasses.description} color="textSecondary" gutterBottom>
+                                    Url: {report[1].url}
                                 </Typography>
-                                <Typography className={cardClasses.title} color="textSecondary" gutterBottom>
-                                    {report[1].description}
-                                </Typography>
-                                <Typography className={cardClasses.title} color="textSecondary" gutterBottom>
-                                    {report[1].url}
-                                </Typography>
-                            </CardContent>
+                            </div>
                         </Card>
                   </div>
                 </div>

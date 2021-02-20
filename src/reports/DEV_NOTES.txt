@@ -9,3 +9,20 @@ I used Lİnks with Buttons to visit the paths created with Route component.
 page very slow. I used refs to get the vlaue from the TextField and changed the title and description with this
 value. I changed the vlaues in onAddReport callback and created the item inside useEffect. Otherwise it changes
 title and description but using the one former vlaues of these variables.
+
+> setState() methods are asynchrounous which means they are not guaranteed to run when a button click. 
+This is why I put setState() methods inside onclick handler and then put the code block which I use the
+updated value inside an UseEffect callback which fires when there is a change in the variable we track.
+
+> React Helmet plugin is used to change titles of individual pages. If you just want to make the title
+of al pages same you could just change it inside html file.
+
+> You can make whole card clickable with CardActionArea tag in Material UI
+
+> To override styles of Material UI components:
+    1) Create useStyle const with makeStyle() method
+    2) Inside this method implement the exact same structure of Css styling. You can check Material UI 
+    component source code for exact style. And change values according to your needs.
+    3) Inside main function create classes const assigning useStyle()
+    4) Inside MAterial UI component tag put className attribute with the created classes and use dot notation 
+    to apply the style. Example: className={cardContentClasses.cardcontent}
