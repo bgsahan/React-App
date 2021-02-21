@@ -50,6 +50,7 @@ h4 {
 
 .container {
     display: block;
+    max-width: 500px;
     padding: 10px;
 }
 
@@ -85,3 +86,15 @@ table {
     padding-right: 15px;
 }
 
+.error_div {
+    color: red;
+}
+
+.top_card_div {
+    float: left;
+    width: 345px;
+    padding-top: 20px;
+    padding-bottom: 30px;
+    padding-left: 10px;
+    padding-right: 10px;
+}

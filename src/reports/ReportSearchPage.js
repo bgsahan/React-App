@@ -2,12 +2,15 @@ import React, { useEffect, useState, useCallback } from "react";
 import './themeStyle.css';
 import axios from "axios";
 import SearchManager from "./SearchManager";
+import TopCard from "./TopCard";
 
 const myServerBaseURL = "https://reports-a586c-default-rtdb.firebaseio.com/";
 
 const ReportSearchPage = () => {
   //This state will be populated with the Axios HTTP response
   const [reports, setReports] = useState([]);
+  const [errorMessage, setErrorMessage] = useState([]);
+  
 
   const loadReports = useCallback(() => {
     axios.get(`${myServerBaseURL}/reports.json`).then(response => {
@@ -17,6 +20,15 @@ const ReportSearchPage = () => {
 
       //const newSearch = reportsArray.filter(([key, value]) => value.url == "www.google.com");
       //console.log(newSearch);
+    }).catch(error => {
+      console.log(error);
+
+      if (error.message = "Network Error") {
+        setErrorMessage("Hata Mesajı: " + error.message + " (İnternet bağlantınızı kontrol edin)");
+      } else {
+        setErrorMessage("Hata Mesajı: " + error.message);
+      }
+      
     });
   }, []);
 
@@ -54,7 +66,21 @@ const ReportSearchPage = () => {
   return (
     <main>
         <div>Report Search Page</div>
+
+        <div className="top_card_div">
+          <TopCard />
+        </div>
+
+        <div className="top_card_div">
+          <TopCard />
+        </div>
+
+        <div className="top_card_div">
+          <TopCard />
+        </div>
+
         <SearchManager reports={reports} onCreateNewReport={onCreateNewReport} />
+        <div className="error_div">{errorMessage}</div>
     </main>
   );
 };

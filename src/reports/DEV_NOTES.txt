@@ -26,3 +26,42 @@ of al pages same you could just change it inside html file.
     3) Inside main function create classes const assigning useStyle()
     4) Inside MAterial UI component tag put className attribute with the created classes and use dot notation 
     to apply the style. Example: className={cardContentClasses.cardcontent}
+
+> To have Material UI TextField validation you make TExtField outline red. Also you can add helpertext message
+to tell about the problem.
+    1) create error boolean const with useState().
+    2) create ref for TextField with useRef().
+    3) add error attribute to TextField component tag and assign it to the error const created.
+    4) change error const value using related setter method in the code blocks necessary (in UseEffects etc).
+    5) Most often you need error message, you can follow the same steps above to change the helpertext 
+    shown below TextField for error messages ina ccordindance with showing error. (attribute helpertext)
+
+> We can do Initial page loads with useEffect & useState. Exmple code below:
+
+    const [isInitialPageLoad, setIsInitialPageLoad] = useState(true);
+
+    if (isInitialPageLoad) {
+        setIsInitialPageLoad(false);
+    } else {
+        setIsError(true);
+        setNewHelperText("Arama kısmı boş."); 
+    }
+
+> We use Promises to be able to call .then() chain methods. Example of Promise function below:
+    function setTitle() {
+      return new Promise((resolve, reject) => {
+        setNewReportTitle(reportTitleTextfieldRef.current.value);
+        resolve(newReportTitle);
+      })
+    }
+
+    // usage
+    setTitle().then((title) => {
+
+    });
+
+> WhenI put type="submit" attriute to a button, ENTER key functions as Click on this button.
+This also solved the back button not going back to the previoud page???
+
+> I solved internet connection error handling with adding a div (class: error_div) in ReportSearchPage.js 
+and use catch after .then() method where I call axios.get(). and changed the text inside the div via useState. 

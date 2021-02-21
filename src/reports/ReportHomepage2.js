@@ -8,12 +8,22 @@ const myServerBaseURL = "https://reports-a586c-default-rtdb.firebaseio.com/";
 const ReportHomepage2 = () => {
   //This state will be populated with the Axios HTTP response
   const [reports, setReports] = useState([]);
+  const [errorMessage, setErrorMessage] = useState([]);
 
   const loadReports = useCallback(() => {
     axios.get(`${myServerBaseURL}/reports.json`).then(response => {
       const reportsArray = Object.entries(response.data);  
       setReports(reportsArray);
       console.log(reportsArray);
+    }).catch(error => {
+      console.log(error);
+
+      if (error.message = "Network Error") {
+        setErrorMessage("Hata Mesajı: " + error.message + " (İnternet bağlantınızı kontrol edin)");
+      } else {
+        setErrorMessage("Hata Mesajı: " + error.message);
+      }
+      
     });
   }, []);
 
@@ -51,6 +61,7 @@ const ReportHomepage2 = () => {
   return (
     <main>
       <ReportManager reports={reports} onCreateNewReport={onCreateNewReport} />
+      <div className="error_div">{errorMessage}</div>
     </main>
   );
 };
