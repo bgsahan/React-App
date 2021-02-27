@@ -24,6 +24,7 @@ const useCardStyles = makeStyles({
     root: {
       minWidth: 275,
       marginBottom: 10,
+      elevation: 20,
     },
     bullet: {
       display: 'inline-block',
@@ -185,7 +186,7 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
             <ul>
                     {queriedReportList.map((report) => (
                         <div className="card_div" onClick={() => onReadReport(report[1].url)}>
-                            <Card className={cardClasses.root}>
+                            <Card className={cardClasses.root} >
                                 <CardActionArea>
                                   <CardContent className={cardContentClasses.cardcontent}>
                                       <Typography className={cardClasses.title} variant="h6" component="h2">

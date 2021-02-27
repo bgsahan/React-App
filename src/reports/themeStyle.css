@@ -98,3 +98,11 @@ table {
     padding-left: 10px;
     padding-right: 10px;
 }
+
+.visible_div {
+    display: block;
+}
+
+.hidden_div {
+    display: none;
+}

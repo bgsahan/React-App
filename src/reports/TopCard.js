@@ -16,15 +16,15 @@ const useStyles = makeStyles({
     },
   });
   
-  export default function TopCard() {
+  export default function TopCard({imageUrl}) {
     const classes = useStyles();
   
     return (
-      <Card className={classes.root}>
+      <Card className={classes.root} elevation={8}>
         <CardActionArea>
           <CardMedia
             className={classes.media}
-            image="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c"
+            image={imageUrl}
             title="Contemplative"
           />
         </CardActionArea>

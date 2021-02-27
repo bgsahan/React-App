@@ -13,6 +13,13 @@ import Typography from '@material-ui/core/Typography';
 import FormHelperText from '@material-ui/core/FormHelperText';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 
+import Radio from '@material-ui/core/Radio';
+import RadioGroup from '@material-ui/core/RadioGroup';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import FormControl from '@material-ui/core/FormControl';
+import FormLabel from '@material-ui/core/FormLabel';
+
+
 const useStyles = makeStyles((theme) => ({
   root: {
     '& > *': {
@@ -78,6 +85,7 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     const fileUpload = useRef(); // We bind this reference with Input for file upload via ref attribute
     const reportTitleTextfieldRef = useRef(null);
     const reportDescriptionTextfieldRef = useRef(null);
+    const reportUrlTextfieldRef = useRef(null);
 
     var fileUrl;  //variable to receive full url of the file uploaded in Firebase Storage
 
@@ -92,6 +100,11 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     const [newTitleHelperText, setNewTitleHelperText] = useState("");
     const [newDescriptionHelperText, setNewDescriptionHelperText] = useState("");
     const [UrlHelperText, setUrlHelperText] = useState("Henüz dosya seçilmedi");
+
+    const [radioValue, setRadioValue] = React.useState("file");
+
+    const fileDivRef = useRef(null);
+    const urlDivRef = useRef(null);
 
     const onNewReportUrlChange = useCallback((event) => {
 
@@ -112,54 +125,63 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
       (event) => {
         event.preventDefault();
 
-        // When button clicks check if TextField is empty and show error message. I actually handle this in useEffect
-        // but had to do this here as well because at first start if no text is written inside TextField then
-        // useEffect doesn't call as TextField vlaue is not changed.
-        if (!newReportTitle) {
-          setIsTitleError(true);
-          setNewTitleHelperText("Title Error 2");
-        } else {
-          setIsTitleError(false);
-          setNewTitleHelperText("");
-        }
-  
-        if (!newReportDescription) {
-          setIsDescriptionError(true);
-          setNewDescriptionHelperText("Description Error 2");
-        } else {
-          setIsDescriptionError(false);
-          setNewDescriptionHelperText("");
-        }
-  
-        if (!newReportUrl) {
-          setIsUrlError(true);
-          console.log("Url is missing");
-        } 
+        if (radioValue == "file") {
+          // When button clicks check if TextField is empty and show error message. I actually handle this in useEffect
+          // but had to do this here as well because at first start if no text is written inside TextField then
+          // useEffect doesn't call as TextField vlaue is not changed.
+          if (!newReportTitle) {
+            setIsTitleError(true);
+            setNewTitleHelperText("Title Error 2");
+          } else {
+            setIsTitleError(false);
+            setNewTitleHelperText("");
+          }
+    
+          if (!newReportDescription) {
+            setIsDescriptionError(true);
+            setNewDescriptionHelperText("Description Error 2");
+          } else {
+            setIsDescriptionError(false);
+            setNewDescriptionHelperText("");
+          }
+    
+          if (!newReportUrl) {
+            setIsUrlError(true);
+            console.log("Url is missing");
+          } 
 
-        // take the chosen file in upload section
-        const file = fileUpload.current.files[0]
+          // take the chosen file in upload section
+          const file = fileUpload.current.files[0]
 
-        if (file) {
-          const storageRef = app.storage().ref();
-          const fileRef = storageRef.child(file.name);
+          if (file) {
+            const storageRef = app.storage().ref();
+            const fileRef = storageRef.child(file.name);
 
-          fileRef.put(file).then(() => {
-            console.log("Uploaded a file.")
+            fileRef.put(file).then(() => {
+              console.log("Uploaded a file.")
 
-            // Get url of the file uploaded in Firebase Storage and set it as Url of the report item inserted in
-            // Firebase Realtime Database. This code block should be inside .then() method otherwise it will try
-            // to assign the url value before file is even uploaded into the database which will give null error.
-            fileRef.getDownloadURL().then((url) => {
-                fileUrl = url;
-                console.log(fileUrl.toString());
-                setNewReportUrl(fileUrl);
+              // Get url of the file uploaded in Firebase Storage and set it as Url of the report item inserted in
+              // Firebase Realtime Database. This code block should be inside .then() method otherwise it will try
+              // to assign the url value before file is even uploaded into the database which will give null error.
+              fileRef.getDownloadURL().then((url) => {
+                  fileUrl = url;
+                  console.log(fileUrl.toString());
+                  setNewReportUrl(fileUrl);
+              });
             });
-          });
+          }
+
+          setNewReportTitle(reportTitleTextfieldRef.current.value);
+          setNewReportDescription(reportDescriptionTextfieldRef.current.value);
+          console.log(newReportTitle + " " + newReportDescription);
+
+        } else if (radioValue == "url") {
+          setNewReportTitle(reportTitleTextfieldRef.current.value);
+          setNewReportDescription(reportDescriptionTextfieldRef.current.value);
+          setNewReportUrl(reportUrlTextfieldRef.current.value);
+          console.log(newReportTitle + " " + newReportDescription + " url");
         }
 
-        setNewReportTitle(reportTitleTextfieldRef.current.value);
-        setNewReportDescription(reportDescriptionTextfieldRef.current.value);
-        console.log(newReportTitle + " " + newReportDescription);
       },
 
       [newReportTitle, newReportDescription, newReportUrl]
@@ -227,8 +249,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     }, [newReportTitle, newReportDescription, newReportUrl]); // Only re-run the effect if newReportUrl changes
 
 
-
-
     // Card button onClick event handler
     const onReadReport = ((reportUrl) => {
       //event.preventDefault();
@@ -238,6 +258,32 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
   
       console.log("Button clicked");
     });
+
+
+    // radio button click handling with options file upload or url link
+    const handleRadioChange = (event) => {
+      setRadioValue(event.target.value);
+    };
+
+    // Set the display property of the Url TExtField and File Upload with adding/removing necessary CSS classes
+     useEffect(() => {
+      if (radioValue == "file") {
+        fileDivRef.current.classList.add("visible_div");
+        fileDivRef.current.classList.remove("hidden_div");
+        urlDivRef.current.classList.add("hidden_div");
+        urlDivRef.current.classList.remove("visible_div");
+
+      } else if (radioValue == "url") {
+        urlDivRef.current.classList.add("visible_div");
+        urlDivRef.current.classList.remove("hidden_div");
+        fileDivRef.current.classList.add("hidden_div");
+        fileDivRef.current.classList.remove("visible_div");
+      }
+    
+    }, [radioValue]); 
+
+
+
   
     return (
       <div>
@@ -270,18 +316,27 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
                   inputRef={reportDescriptionTextfieldRef} />
             </div>
 
-{/*   Code for manually entering Url
-
-          <div className="container">
-                <input
-                  type="text"
-                  placeholder="Url..."
-                  value={newReportUrl}
-                  onChange={onNewReportUrlChange} />
-            </div>
- */}
-
             <div>
+              <FormControl component="fieldset">
+                <FormLabel component="legend">Yükleme Türü:</FormLabel>
+                <RadioGroup row aria-label="upload_type" name="upload1" value={radioValue} onChange={handleRadioChange}>
+                  <FormControlLabel value="file" control={<Radio />} label="Dosya" />
+                  <FormControlLabel value="url" control={<Radio />} label="URL Link" />
+                </RadioGroup>
+              </FormControl>
+            </div>
+
+            <div className ="hidden_div container" ref={urlDivRef}>
+              <TextField
+                  label="Url Linki"
+                  size="small"
+                  variant="outlined"
+                  fullWidth
+                  placeholder="Url Linki yazın"
+                  inputRef={reportUrlTextfieldRef} />
+            </div>
+
+            <div className ="visible_div" ref={fileDivRef}>
               <input
                 id="contained-button-file"
                 className={uploadClasses.input}
