@@ -19,6 +19,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormControl from '@material-ui/core/FormControl';
 import FormLabel from '@material-ui/core/FormLabel';
 
+import ReportList from "./ReportList";
+
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -93,15 +95,14 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     const [newReportTitle, setNewReportTitle] = useState("");
     const [newReportDescription, setNewReportDescription] = useState("");
     const [newReportUrl, setNewReportUrl] = useState("");
-    const [isTitleError, setIsTitleError] = useState(false);
-    const [isDescriptionError, setIsDescriptionError] = useState(false);
     const [isUrlError, setIsUrlError] = useState(true);
-    const [isInitialPageLoad, setIsInitialPageLoad] = useState(true);
     const [newTitleHelperText, setNewTitleHelperText] = useState("");
     const [newDescriptionHelperText, setNewDescriptionHelperText] = useState("");
     const [UrlHelperText, setUrlHelperText] = useState("Henüz dosya seçilmedi");
 
     const [radioValue, setRadioValue] = React.useState("file");
+
+    const [state, setState] = React.useState("");
 
     const fileDivRef = useRef(null);
     const urlDivRef = useRef(null);
@@ -121,34 +122,10 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
 
     // Upload button callback. Here I upload the file into Firebase Storage. But don't create/add item into Firebase Real
     // Time Database. I do that inside UseEffect only AFTER the file is uploaded and the url is received.
-    const onAddReport = useCallback(
-      (event) => {
+    const onAddReport = (event) => {
         event.preventDefault();
 
         if (radioValue == "file") {
-          // When button clicks check if TextField is empty and show error message. I actually handle this in useEffect
-          // but had to do this here as well because at first start if no text is written inside TextField then
-          // useEffect doesn't call as TextField vlaue is not changed.
-          if (!newReportTitle) {
-            setIsTitleError(true);
-            setNewTitleHelperText("Title Error 2");
-          } else {
-            setIsTitleError(false);
-            setNewTitleHelperText("");
-          }
-    
-          if (!newReportDescription) {
-            setIsDescriptionError(true);
-            setNewDescriptionHelperText("Description Error 2");
-          } else {
-            setIsDescriptionError(false);
-            setNewDescriptionHelperText("");
-          }
-    
-          if (!newReportUrl) {
-            setIsUrlError(true);
-            console.log("Url is missing");
-          } 
 
           // take the chosen file in upload section
           const file = fileUpload.current.files[0]
@@ -166,26 +143,24 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
               fileRef.getDownloadURL().then((url) => {
                   fileUrl = url;
                   console.log(fileUrl.toString());
+
+                  //this order is important. Url set state should be at last or title & description is not assigned
+                  setNewReportTitle(reportTitleTextfieldRef.current.value);
+                  setNewReportDescription(reportDescriptionTextfieldRef.current.value);
                   setNewReportUrl(fileUrl);
               });
             });
           }
 
-          setNewReportTitle(reportTitleTextfieldRef.current.value);
-          setNewReportDescription(reportDescriptionTextfieldRef.current.value);
-          console.log(newReportTitle + " " + newReportDescription);
-
         } else if (radioValue == "url") {
           setNewReportTitle(reportTitleTextfieldRef.current.value);
           setNewReportDescription(reportDescriptionTextfieldRef.current.value);
           setNewReportUrl(reportUrlTextfieldRef.current.value);
-          console.log(newReportTitle + " " + newReportDescription + " url");
         }
 
-      },
+        //console.log("Radio Value: " + radioValue + " - " + titleString + " - " + descriptionString + " - " + urlString);
 
-      [newReportTitle, newReportDescription, newReportUrl]
-      );
+      }
 
     // UseEffect is called to apply a side effect whenever a re-render is made. If we add a dependency inside second 
     // parameter array then it only calls side effect when this dependency is changed. SO basically what I do here
@@ -193,38 +168,11 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     // with .then() methods
     useEffect(() => {
 
-      // When initial page loads don't show the error messages
-      if (isInitialPageLoad) {
-        setIsInitialPageLoad(false);
-
-      } else {
-        if (!newReportTitle) {
-          setIsTitleError(true);
-          setNewTitleHelperText("Title Error");
-        } else {
-          setIsTitleError(false);
-          setNewTitleHelperText("");
-        }
-  
-        if (!newReportDescription) {
-          setIsDescriptionError(true);
-          setNewDescriptionHelperText("Description Error");
-        } else {
-          setIsDescriptionError(false);
-          setNewDescriptionHelperText("");
-        }
-  
-        if (!newReportUrl) {
-          setIsUrlError(true);
-          console.log("Url is missing");
-        } 
-      }
-
       // We check if there is any value inside Url string. IF we don't do this UseEffect calls anytime the page
       // reloads and adds an empty item into the database.
       if (newReportTitle && newReportDescription && newReportUrl) {
 
-        console.log("positive code block executes");
+        console.log("positive code block executes:" + newReportTitle + " " + newReportDescription + " " + newReportUrl);
 
         // The code where we create/add item into database
         onCreateNewReport(newReportTitle, newReportDescription, newReportUrl);
@@ -233,32 +181,14 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
         //data model. And stop error messages from showing up since TExtFields will be empty.
         reportDescriptionTextfieldRef.current.value = "";
         reportTitleTextfieldRef.current.value = "";
+        reportUrlTextfieldRef.current.value = "";
+        //TODO: Change "Dosya seçildi" text to "Dosya seçiniz" so user will notice he should choose a file.
 
-        setNewReportTitle("");
-        setNewReportDescription("");
-        //setNewReportUrl("");
-
-        setIsDescriptionError(false);
-        setIsUrlError(false);
-        setIsTitleError(false);
-        
       } else {
-        console.log("negative code block executes");
+        console.log("negative code block executes " + newReportTitle + " - " + newReportDescription + " - " + newReportUrl);
       }
 
-    }, [newReportTitle, newReportDescription, newReportUrl]); // Only re-run the effect if newReportUrl changes
-
-
-    // Card button onClick event handler
-    const onReadReport = ((reportUrl) => {
-      //event.preventDefault();
-  
-      const url = reportUrl;
-      window.open(url, '_blank');
-  
-      console.log("Button clicked");
-    });
-
+    }, [newReportUrl]); // Only re-run the effect if newReportUrl changes
 
     // radio button click handling with options file upload or url link
     const handleRadioChange = (event) => {
@@ -283,8 +213,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     }, [radioValue]); 
 
 
-
-  
     return (
       <div>
           <form className={classes.root} noValidate autoComplete="off">
@@ -298,7 +226,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
                   fullWidth
                   autoFocus
                   placeholder="Başlık yazın"
-                  error = {isTitleError}
                   helperText= {newTitleHelperText}
                   inputRef={reportTitleTextfieldRef} />
             </div>
@@ -311,7 +238,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
                   variant="outlined"
                   fullWidth
                   placeholder="Açıklama yazın"
-                  error = {isDescriptionError}
                   helperText= {newDescriptionHelperText}
                   inputRef={reportDescriptionTextfieldRef} />
             </div>
@@ -365,36 +291,8 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
           </form>
         <div/>
 
-        <section>
-          <p>Reports:</p>
-          <ul>
-            {reports.map((report) => (
-                <div>
-                    <div >
-                        <Card className={cardClasses.root}>
-                            <div onClick={() => onReadReport(report[1].url)}>
-                              <CardActionArea>
-                                <CardContent className={cardContentClasses.cardcontent}>
-                                    <Typography className={cardClasses.title} variant="h6" component="h2">
-                                        {report[1].title}
-                                    </Typography>
-                                    <Typography className={cardClasses.description} color="textSecondary" gutterBottom>
-                                        {report[1].description}
-                                    </Typography>
-                                  </CardContent>
-                                </CardActionArea>
-                            </div>
-                            <div className="card_div2">
-                                <Typography className={cardClasses.description} color="textSecondary" gutterBottom>
-                                    Url: {report[1].url}
-                                </Typography>
-                            </div>
-                        </Card>
-                  </div>
-                </div>
-            ))}
-          </ul>
-        </section>
+        <ReportList reports={reports} />
+
       </div>
     );
   };

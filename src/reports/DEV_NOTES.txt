@@ -64,4 +64,8 @@ to tell about the problem.
 This also solved the back button not going back to the previoud page???
 
 > I solved internet connection error handling with adding a div (class: error_div) in ReportSearchPage.js 
-and use catch after .then() method where I call axios.get(). and changed the text inside the div via useState. 
+and use catch after .then() method where I call axios.get(). and changed the text inside the div via useState.
+
+> To stop a functional component to re-render you can wrap it with React.memo(). So if its input values are 
+not changed then it will not re-render itself when state changes. It should a seperate functional component in
+a seperate .js file. And it should have inputs for it to work. I used React.memo() example in ReportList.js
