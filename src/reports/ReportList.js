@@ -24,6 +24,7 @@ const useStyles = makeStyles((theme) => ({
     root: {
       minWidth: 275,
       marginBottom: 10,
+      elevation: 20,
     },
     bullet: {
       display: 'inline-block',
@@ -38,10 +39,7 @@ const useStyles = makeStyles((theme) => ({
     description: {
       fontSize: 12,
       fontWeight: "normal",
-    },
-    pos: {
-      marginBottom: 12,
-    },
+    }
   });  
   
   const useCardContentStyles = makeStyles({
@@ -66,11 +64,10 @@ const ReportList = React.memo( ({ reports: reports = []}) => {
     return (
         <div> 
           <section>
-            <p>Reports:</p>
+            <p className="list_p">Liste:</p>
             <ul>
               {reports.map((report) => (
-                  <div>
-                      <div >
+                  <div className="card_div3">
                           <Card className={cardClasses.root}>
                               <div onClick={() => {
                                         const url = report[1].url;
@@ -94,7 +91,6 @@ const ReportList = React.memo( ({ reports: reports = []}) => {
                                   </Typography>
                               </div>
                           </Card>
-                    </div>
                   </div>
               ))}
             </ul>

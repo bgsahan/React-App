@@ -3,7 +3,7 @@ import {app} from './base.js'
 import { useRef } from "react";
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
-import { makeStyles } from '@material-ui/core/styles';
+import { withStyles, makeStyles } from '@material-ui/core/styles';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import SearchIcon from '@material-ui/icons/Search';
 import Card from '@material-ui/core/Card';
@@ -43,10 +43,7 @@ const useCardStyles = makeStyles({
     card_content: {
       margin: 0,
       padding: 0,
-    },
-    pos: {
-      marginBottom: 12,
-    },
+    }
 });  
 
 const useCardContentStyles = makeStyles({
@@ -60,6 +57,36 @@ const useCardContentStyles = makeStyles({
     }
   }
 });
+
+const CustomTextField = withStyles({
+  root: {
+    '& label': {
+      color: '#5969C5',
+    },
+
+    '& label.Mui-focused': {
+      color: '#3F51B5',
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: '#3F51B5',
+    },
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: '#5969C5',
+        border: '2px solid',
+      },
+      '&:hover fieldset': {
+        borderColor: '#3F51B5',
+        border: '3px solid',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: '#3F51B5',
+        border: '3px solid',
+      },
+    },
+  },
+})(TextField);
+
 
 export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport }) => {
 
@@ -89,19 +116,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
         event.preventDefault();
 
         setNewReportTitle(reportTitleTextfieldRef.current.value);
-
-        // When button clicks check if TextField is empty and show error message. I actually handle this in useEffect
-        // but had to do this here as well because at first start if no text is written inside TextField then
-        // useEffect doesn't call as TextField vlaue is not changed.
-        if (newReportTitle) {
-          setIsError(false);
-          setNewHelperText("");
-        
-        } else {
-          setIsError(true);
-          setNewHelperText("Arama kısmı boş."); 
-        }
-
       });
 
 
@@ -125,67 +139,68 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
         // check if there is any text inside search field before applying search
         if (newReportTitle) {
 
-          // hide error mesage if there is text inside TextField
-          setIsError(false);
-          setNewHelperText("");
-
           // I added useState for queriedReportList because whenever a new list is queried we need to update the table
-          setQueriedReportList(reports.filter(([key, value]) => value.title.includes(newReportTitle)));
+          // To make search case insensitive I needed an if condition both with lower, uppper and normal letters.
+          // Problem here is if a word is half upper half lower letter (Ex: NOte) then it won't work. So I need to 
+          // fix this with RegEx.
+          setQueriedReportList(reports.filter(([key, value]) => {
+            if(value.title.toLowerCase().includes(newReportTitle) || 
+               value.title.includes(newReportTitle) ||
+               value.title.toUpperCase().includes(newReportTitle)) {
+
+              return true;
+            }
+
+            //TODO: Fix case insensitive search with new RegExp(search_str, "i")
+          }));
 
         // if there is no text in search field then fetch all the items
         } else {
             setQueriedReportList(reports);
-
-            // When initial page loads don't show the error message
-            if (isInitialPageLoad) {
-              setIsInitialPageLoad(false);
-            } else {
-              setIsError(true);
-              setNewHelperText("Arama kısmı boş."); 
-            }
         }
 
     }, [newReportTitle]); 
 
     return (
         <div>
-            <form>
+            <form noValidate autoComplete="off">
 
-                <div className="container">
-                    <TextField
-                        error = {isError}
-                        id="outlined-read-only-input"
-                        label="Arama"
-                        placeholder="Başlıkta geçen bir kelime yazın"
-                        helperText= {newHelperText}
-                        InputProps={{
-                            startAdornment: (
-                                <InputAdornment position="start">
-                                <SearchIcon />
-                                </InputAdornment>
-                            ),
-                        }}
-                        variant="outlined"
-                        size="small"
-                        autoFocus
-                        fullWidth
-                        inputRef={reportTitleTextfieldRef} />
-                </div>
+                <div className="search_area_div">
 
-                <div className={classes.root}>
-                    <Button onClick={onSearchReport} type="submit" variant="contained" color="primary" >
-                        Ara
-                    </Button>
+                  <div className="search_textfield">
+                      <CustomTextField
+                          id="outlined-read-only-input"
+                          label="Arama"
+                          placeholder="Başlıkta geçen bir kelime yazın"
+                          InputProps={{
+                              startAdornment: (
+                                  <InputAdornment position="start">
+                                  <SearchIcon />
+                                  </InputAdornment>
+                              ),
+                          }}
+                          variant="outlined"
+                          size="small"
+                          autoFocus
+                          fullWidth
+                          inputRef={reportTitleTextfieldRef} />
+                  </div>
+                  <div className={classes.root}>
+                      <Button onClick={onSearchReport} type="submit" variant="contained" color="primary" >
+                          Ara
+                      </Button>
+                  </div>
+
                 </div>
 
             </form>
 
 
             <section>
-            <p>Reports:</p>
+            <p className="list_p">Liste:</p>
             <ul>
                     {queriedReportList.map((report) => (
-                        <div className="card_div" onClick={() => onReadReport(report[1].url)}>
+                        <div className="card_div3" onClick={() => onReadReport(report[1].url)}>
                             <Card className={cardClasses.root} >
                                 <CardActionArea>
                                   <CardContent className={cardContentClasses.cardcontent}>

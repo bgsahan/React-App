@@ -1,5 +1,5 @@
 body {
-    background-color: #fafafa;
+    background-color: #e7eaee;
     font-family:Arial, Helvetica, sans-serif;
 }
 
@@ -9,6 +9,8 @@ li {
 
 ul {
     list-style-type: disc;
+    margin: 0px;
+    padding: 0px;
 }
 
 li.checkbox_section {
@@ -86,6 +88,15 @@ table {
     padding-right: 15px;
 }
 
+.card_div3 {
+    padding-top: 0px;
+    padding-bottom: 5px;
+    padding-left: 10px;
+    padding-right: 10px;
+    margin: 0px;
+    max-width: 900px;
+}
+
 .error_div {
     color: red;
 }
@@ -99,10 +110,38 @@ table {
     padding-right: 10px;
 }
 
+.top_card_layout_div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: row; 
+    width: 100%;
+}
+
 .visible_div {
     display: block;
 }
 
 .hidden_div {
     display: none;
+}
+
+.list_p {
+    padding-left: 10px;
+    text-decoration: underline; 
+}
+
+.search_textfield {
+    display: block;
+    max-width: 500px;
+    min-width: 300px;
+    padding-left: 10px;
+}
+
+.search_area_div {
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    flex-direction: row; 
+    width: 100%;
 }

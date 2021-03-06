@@ -15,8 +15,13 @@ const ReportSearchPage = () => {
   const loadReports = useCallback(() => {
     axios.get(`${myServerBaseURL}/reports.json`).then(response => {
       const reportsArray = Object.entries(response.data);  
-      setReports(reportsArray);
-      console.log(reportsArray);
+
+      // I reversed order of array to show the last added item at the start. But this is a hack&slash. I need to
+      // find a solution to order items according to the date or soemthing. This may be a TODO.
+      const reverseReportsArray = reportsArray.reverse();
+      setReports(reverseReportsArray);
+      //console.log(reportsArray);
+      console.log(reverseReportsArray);
 
       //const newSearch = reportsArray.filter(([key, value]) => value.url == "www.google.com");
       //console.log(newSearch);
@@ -73,22 +78,23 @@ const ReportSearchPage = () => {
 
   return (
     <main>
-        <div>Report Search Page</div>
+        <div className="top_card_layout_div">
 
-        <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
-          
-          <TopCard 
-            imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
-        </div>
+          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+            <TopCard
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
+          </div>
 
-        <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
-          <TopCard 
-            imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
-        </div>
+          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+            <TopCard
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
+          </div>
 
-        <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
-          <TopCard 
-            imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c"/>
+          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+            <TopCard
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c"/>
+          </div>
+   
         </div>
 
         <SearchManager reports={reports} onCreateNewReport={onCreateNewReport} />

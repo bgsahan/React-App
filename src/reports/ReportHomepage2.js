@@ -12,9 +12,13 @@ const ReportHomepage2 = () => {
 
   const loadReports = useCallback(() => {
     axios.get(`${myServerBaseURL}/reports.json`).then(response => {
-      const reportsArray = Object.entries(response.data);  
-      setReports(reportsArray);
-      console.log(reportsArray);
+      const reportsArray = Object.entries(response.data); 
+      
+      // I reversed order of array to show the last added item at the start. But this is a hack&slash. I need to
+      // find a solution to order items according to the date or soemthing. This may be a TODO.
+      const reverseReportsArray = reportsArray.reverse();
+      setReports(reverseReportsArray);
+      console.log(reverseReportsArray);
     }).catch(error => {
       console.log(error);
 
