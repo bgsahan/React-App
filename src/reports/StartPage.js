@@ -27,12 +27,9 @@ const StartPage = () => {
             <title>Raporlar</title>
           </Helmet>
 
-          <div>
-            <div className="container">
-                Rapor İzleme Sistemi
-            </div>
+          <div className="start_page_container_div">
 
-            <div className="container">
+            <div className="start_page_div">
                   <Link to="/search" className="button-link">
                     <Button variant="contained" color="primary" >
                         RAPOR LİSTESİ
@@ -41,10 +38,10 @@ const StartPage = () => {
             </div>
 
 
-            <div className="container">
+            <div className="start_page_div">
                   <Link to="/add-report" className="button-link">
                     <Button variant="contained" color="primary" >
-                        RAPOR YÜKLEME
+                        KONTROL PANELİ
                     </Button>
                   </Link>
             </div>

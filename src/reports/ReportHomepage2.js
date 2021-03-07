@@ -18,7 +18,7 @@ const ReportHomepage2 = () => {
       // find a solution to order items according to the date or soemthing. This may be a TODO.
       const reverseReportsArray = reportsArray.reverse();
       setReports(reverseReportsArray);
-      console.log(reverseReportsArray);
+      console.log(reportsArray);
     }).catch(error => {
       console.log(error);
 
@@ -62,9 +62,29 @@ const ReportHomepage2 = () => {
     [loadReports]
   );
 
+  // Custom method for deleting item from the list
+  const removeItemWithKey = (itemKey) => {
+    console.log("delete " + itemKey);
+    
+    axios.delete(`${myServerBaseURL}/reports/${itemKey}.json`).then(response => {
+      loadReports();
+      
+    }).catch(error => {
+      console.log(error);
+
+      if (error.message = "Network Error") {
+        setErrorMessage("Hata Mesajı: " + error.message + " (İnternet bağlantınızı kontrol edin)");
+      } else {
+        setErrorMessage("Hata Mesajı: " + error.message);
+      }
+      
+    });
+
+  }
+
   return (
     <main>
-      <ReportManager reports={reports} onCreateNewReport={onCreateNewReport} />
+      <ReportManager reports={reports} onCreateNewReport={onCreateNewReport} removeItemWithKey={removeItemWithKey} />
       <div className="error_div">{errorMessage}</div>
     </main>
   );

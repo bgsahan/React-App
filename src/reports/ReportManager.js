@@ -46,7 +46,7 @@ const CustomTextField = withStyles({
   },
 })(TextField);
 
-export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport }) => {
+export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport, removeItemWithKey: removeItemWithKey }) => {
 
     const classes = useStyles();
 
@@ -142,7 +142,6 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
     }, [newReportTitle, newReportDescription, newReportUrl]); // Only re-run the effect if newReportUrl changes
 
 
-
     return (
       <div>
           <form noValidate autoComplete="off">
@@ -200,7 +199,7 @@ export default ({ reports: reports = [], onCreateNewReport: onCreateNewReport })
           </form>
         <div/>
 
-        <ReportList reports={reports} />
+        <ReportList reports={reports} removeItemWithKey={removeItemWithKey} />
 
       </div>
     );
