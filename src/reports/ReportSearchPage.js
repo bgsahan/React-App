@@ -80,19 +80,19 @@ const ReportSearchPage = () => {
     <main>
         <div className="top_card_layout_div">
 
-          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+          <div className="top_card_div" onClick={() => goToLink("https://www.google.com")}>
             <TopCard
-              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/02.jpg?alt=media&token=8a0df9bb-d912-4216-ad38-0d0aa6538595" />
           </div>
 
-          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+          <div className="top_card_div" onClick={() => goToLink("https://www.google.com")}>
             <TopCard
-              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c" />
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/03.jpg?alt=media&token=94af93b3-b8be-4644-9528-3c3a91b23512" />
           </div>
 
-          <div className="top_card_div" onClick={() => goToLink("https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/skyscraper-3184798_1280.jpg?alt=media&token=569b8828-ff37-4c24-a7bd-7e92a3ebc0cc")}>
+          <div className="top_card_div" onClick={() => goToLink("https://www.google.com")}>
             <TopCard
-              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/rapor_cover1.jpg?alt=media&token=644e8a0f-597a-422e-960f-fc82f5d5dc0c"/>
+              imageUrl="https://firebasestorage.googleapis.com/v0/b/reports-a586c.appspot.com/o/01.jpg?alt=media&token=c8c55370-f687-4dec-90e3-f6850d6ac137"/>
           </div>
    
         </div>
